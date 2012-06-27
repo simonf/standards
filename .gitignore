@@ -1,0 +1,6 @@
+*.*~
+*.js
+*.css
+node_modules
+public/lib
+.sass-cache
