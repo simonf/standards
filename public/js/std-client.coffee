@@ -56,38 +56,27 @@ Standard = {
 
 View = {
   listElement : null,
+  editingElement : null,
   processClicks : ->
     $("#list a.edit-link").click ->
-      View.showStandard $(this).attr("data-id"),true
+      View.stopEditing()
+      View.editStandard this,true
       return false
     $("#list a.view-link").click ->
-      View.showStandard $(this).attr("data-id"),false
+      View.stopEditing()
+      View.editStandard this,false
       return false
-    return
-  ,
-  showStandard : (id,editable) ->
-    $.each Standard.standards, (ndx, val) ->
-      if val._id == id
-        View.populateFormFromStandard "#form", val, editable
     return
   ,
   showSomeStandards : (arr) ->
     $.each arr, (ndx,val) ->
-      $(View.listElement).append View.makeStandardElement val
+      $(View.listElement).append View.makeListItem val
       return
     View.processClicks()
     return
   ,
-  makeStandardElement : (std) ->
-    View.makeListItem std
-  ,
   makeListItem : (std) ->
     _.template Template.currentlist, { std : std }
-  ,
-  clearForm : ->
-    document.forms["stdform"].reset()
-    $("#stdform #_id").val("")
-    return
   ,
   processForm : (elem, func) ->
     std = View.makeStandardFromForm elem
@@ -101,14 +90,30 @@ View = {
       retval[lab] = $(tgt).val()
     return retval
   ,
-  populateFormFromStandard : (elem, std, editable) ->
-    $("#edit-buttons-wrap").show() if editable
-    $("#edit-buttons-wrap").hide() if not editable
-    for lab in Standard.fields
-      tgt = "#{elem} ##{lab}"
-      $(tgt).val(std[lab])
-      $(tgt).attr("readonly","readonly") if not editable
-      $(tgt).removeAttr("readonly") if editable
+  stopEditing : ->
+    $("#form").remove()
+    if View.editingElement != null
+      $(View.editingElement).show()
+      View.editingElement=null
+  ,
+  editStandard : (row,editable) ->
+    id = $(row).attr "data-id"
+    $.each Standard.standards, (ndx, val) ->
+      if val._id == id
+        View.editingElement = $(row).closest ".standard-row"
+        elem= _.template Template.stdform, {std :val}
+        View.editingElement.after elem
+        $("#form").submit ->
+          View.processForm "#form",Standard.addOrUpdate
+          return false
+        $("#cancel-button").click ->
+          View.stopEditing()
+          return false
+        View.editingElement.hide()
+        $("#edit-buttons-wrap").show() if editable
+        $("#edit-buttons-wrap").hide() if not editable
+        $("#form input").attr "readonly","readonly" if not editable
+        $("#form input").removeAttr "readonly" if editable
     return
 }
 
@@ -121,5 +126,42 @@ Template = {
       <div class='list-view-link'><a href='' class='view-link' data-id='<%= std._id %>'>View</a></div>
       <div class='list-edit-link'><a href='' class='edit-link' data-id='<%= std._id %>'>Edit</a></div>
     </div>
+""",
+  stdform: """
+      <div id='form'>
+	<form id='stdform' method='post' action=''>
+	  <input type='hidden' id='_id' value='<%= std._id %>'/>
+	  <div id='name-wrap'>
+	    <label for='name'>Name</label>
+	    <input id='name' type='text' value='<%=std.name %>'/>
+	  </div>
+	  <div id='current-wrap'>
+	    <label for='current'>Current</label>
+	    <textarea id='current' rows='3'><%= std.current %></textarea>
+	  </div>
+	  <div id='emerging-wrap'>
+	    <label for='emerging'>Emerging</label>
+	    <textarea id='emerging' rows='3'><%= std.emerging %></textarea>
+	  </div>
+	  <div id='deprecated-wrap'>
+	    <label for='deprecated'>Deprecated</label>
+	    <textarea id='deprecated' rows='3'><%= std.deprecated %></textarea>
+	  </div>
+	  <div id='obsolete-wrap'>
+	    <label for='obsolete'>Obsolete</label>
+	    <textarea id='obsolete' rows='3'><%= std.obsolete %></textarea>
+	  </div>
+	  <div id='tags-wrap'>
+	    <label for='tags'>Tags (comma separated)</label>
+	    <input id='tags' type='text' value='<%= std.tags %>'/>
+	  </div>
+          <div id='edit-buttons-wrap'>
+	    <input type='submit' value='Submit' id='submit'></input>
+	  </div>
+          <div id='cancel-wrap'>
+	    <a href='' id='cancel-button'>Cancel</a>
+          </div>
+	</form>
+      </div>
 """
 }
