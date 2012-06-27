@@ -2,9 +2,11 @@ Standard = {
   fields : ["_id", "name", "current", "emerging", "deprecated", "obsolete", "tags"],
   standards : [],
   tagfilter: [],
+  tags: [],
   getAllStandards : (callback) ->
     $.getJSON '/', (data) ->
       Standard.standards = data
+      Standard.makeTagList()
       callback()
       return
     return
@@ -44,19 +46,48 @@ Standard = {
     $.ajax settings
     return
   ,
+  makeTagList : ->
+    Standard.tags = []
+    for std in Standard.standards
+      for tag in std.tags.split ','
+        Standard.tags.push tag.trim() if Standard.tags.indexOf tag.trim() == -1
+  ,
   matchTagList: (taglist, comma_separated) ->
-    retval = true
+    retval = if taglist.length > 0 then false else true
     for tag in taglist
-      retval = false if comma_separated.toLowerCase().indexOf tag.toLowerCase() == -1
+      retval = true if comma_separated.indexOf tag.toLowerCase() == -1
     return retval
   ,
   getFilteredStandards :  ->
-    standard for standard in Standard.standards when Standard.matchTagList Standard.tagfilter, standard.tags
+    standard for standard in Standard.standards when Standard.matchTagList Standard.tagfilter, standard.tags.toLowerCase()
 }
 
 View = {
   listElement : null,
+  tagListElement : null,
   editingElement : null,
+  showTagList : ->
+    for tag in Standard.tags
+      $(View.tagListElement).append _.template Template.tagcloudelement, {tag : tag}
+  ,
+  tagClicked : (ctag) ->
+    i = Standard.tagfilter.indexOf ctag
+    Standard.tagfilter.splice i,1 if i != -1
+    Standard.tagfilter.push ctag if i == -1
+    $("#tagfilter").val Standard.tagfilter.sort().join(' ')
+    View.showFilteredStandards()
+    return
+  ,
+  setFilter : (elem) ->
+    Standard.tagFilter = $(elem).val().split(/[ ,]/)
+    View.showFilteredStandards()
+    return
+  ,
+  clearFilter : (elem) ->
+    Standard.tagFilter = []
+    View.showFilteredStandards()
+    return
+  ,
   processClicks : ->
     $("#list a.edit-link").click ->
       View.stopEditing()
@@ -68,7 +99,12 @@ View = {
       return false
     return
   ,
+  showFilteredStandards : ->
+    View.showSomeStandards Standard.getFilteredStandards()
+  ,
   showSomeStandards : (arr) ->
+    View.stopEditing()
+    $(View.listElement).empty()
     $.each arr, (ndx,val) ->
       $(View.listElement).append View.makeListItem val
       return
@@ -118,6 +154,7 @@ View = {
 }
 
 Template = {
+  tagcloudelement : "<a class='taginlist' href='' onclick='javascript:View.tagClicked(\"<%= tag %>\"); return false;'><%= tag %></a>",
   linkinlist : "<div class='standard'><a href='' class='edit-link' data-id='<%= std._id %>'><%= std.name %></a></div>",
   currentlist: """
     <div class='standard-row'> 

@@ -5,11 +5,17 @@
     <link rel="stylesheet" type="text/css" href="/public/css/standards.css"/>
     <script type="application/javascript" src="/public/lib/jquery-1.7.2.min.js"></script>
     <script type="application/javascript" src="/public/lib/underscore-min.js"></script>
+    <script type="application/javascript" src="/public/js/shim.js"></script>
   </head>
   <body>
     <div id="main">
       <h1>Standards</h1>
-      <button id='newb'>New</button>
+      <div id="topstrip">
+	<button id="newb">New</button>
+	<input id="tagfilter" type="text"/>
+	<button id="filter-set">Filter</button>
+	<button id="filter-clear">Clear</button>
+      </div>
       <div id="list">
 	<div id="list-view">
 	</div>
@@ -20,11 +26,14 @@
     <script type="application/javascript" src="/public/js/std-client.js"></script>
     <script type="text/javascript">
      $(document).ready(function(){
-       $("#newb").click(function() { View.clearForm(); });
+       $("button#newb").click(function() { View.clearForm(); });
+       $("button#filter-set").click(function() { View.setFilter("#filter-set"); });
+       $("button#filter-clear").click(function() { View.clearFilter("#filter-clear"); });
        View.listElement = "#list-view";
+       View.tagListElement = "#tagcloud";
        Standard.getAllStandards(function() { 
-               var stds = Standard.getFilteredStandards();
-               View.showSomeStandards(stds);
+               View.showFilteredStandards();
+               View.showTagList();
        });
      });
     </script>

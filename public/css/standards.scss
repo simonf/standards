@@ -4,14 +4,18 @@ body {
   background-color: #efe;
   color: #111; 
 }
-/*
-table {
-  margin-bottom: 1em;
-  th {
-    text-align: left;
+
+div#tagcloud {
+  margin-left: 50%;
+  a.taginlist {
+    margin-right: 1em;
   }
 }
-*/
+
+div#list {
+  float: left;
+  width: 50%;
+}
 
 div.standard-row {
   width: 50%;
