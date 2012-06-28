@@ -34,6 +34,10 @@ Standard = {
            Standards.standards.push std
            View.clearForm()
            return
+       settings.error = (jqxhr, txt, err) ->
+           alert "#{txt}: #{err}"
+           alert jqxhr.getAllResponseHeaders().toString()
+           return
     else
        settings.type = "PUT"
        settings.dataType = "text"
@@ -50,16 +54,17 @@ Standard = {
     Standard.tags = []
     for std in Standard.standards
       for tag in std.tags.split ','
-        Standard.tags.push tag.trim() if Standard.tags.indexOf tag.trim() == -1
+        Standard.tags.push tag.trim() if Standard.tags.indexOf(tag.trim()) == -1
+    return
   ,
   matchTagList: (taglist, comma_separated) ->
     retval = if taglist.length > 0 then false else true
     for tag in taglist
-      retval = true if comma_separated.indexOf tag.toLowerCase() == -1
+      retval = true if comma_separated.indexOf(tag.trim()) != -1
     return retval
   ,
   getFilteredStandards :  ->
-    standard for standard in Standard.standards when Standard.matchTagList Standard.tagfilter, standard.tags.toLowerCase()
+    standard for standard in Standard.standards when Standard.matchTagList Standard.tagfilter, standard.tags
 }
 
 View = {
@@ -70,21 +75,28 @@ View = {
     for tag in Standard.tags
       $(View.tagListElement).append _.template Template.tagcloudelement, {tag : tag}
   ,
+  showSelectedTags : ->
+    $("#tagfilter").val Standard.tagfilter.sort().join(' ')
+  ,
   tagClicked : (ctag) ->
     i = Standard.tagfilter.indexOf ctag
     Standard.tagfilter.splice i,1 if i != -1
     Standard.tagfilter.push ctag if i == -1
-    $("#tagfilter").val Standard.tagfilter.sort().join(' ')
+    View.showSelectedTags()
     View.showFilteredStandards()
     return
   ,
   setFilter : (elem) ->
-    Standard.tagFilter = $(elem).val().split(/[ ,]/)
+    v = $("#tagfilter").val()
+    va = v.split(/[ ,]/)
+    Standard.tagfilter = (v for v in va when v.length > 0)
+    View.showSelectedTags()
     View.showFilteredStandards()
     return
   ,
   clearFilter : (elem) ->
-    Standard.tagFilter = []
+    Standard.tagfilter = []
+    View.showSelectedTags()
     View.showFilteredStandards()
     return
   ,
@@ -115,8 +127,16 @@ View = {
     _.template Template.currentlist, { std : std }
   ,
   processForm : (elem, func) ->
-    std = View.makeStandardFromForm elem
-    func std
+    std = View.makeStandardFromForm "#form"
+    Standard.addOrUpdate std
+    if std._id == null || std._id == ""
+      Standards.standards.push std
+    else
+      $.each Standard.standards, (ndx,val) ->
+        if val._id == std._id
+          Standard.standards[ndx]=std
+    View.stopEditing()
+    View.showFilteredStandards()    
     return
   ,
   makeStandardFromForm : (elem) ->
@@ -132,24 +152,37 @@ View = {
       $(View.editingElement).show()
       View.editingElement=null
   ,
+  configureForm : (elem, editable) ->
+    View.editingElement.after elem
+    View.editingElement.hide()
+    $("#form").submit ->
+      View.processForm()
+      return false
+    $("#cancel-button").click ->
+      View.stopEditing()
+      return false
+    $("#edit-buttons-wrap").show() if editable
+    $("#edit-buttons-wrap").hide() if not editable
+    $("#form input").attr "readonly","readonly" if not editable
+    $("#form input").removeAttr "readonly" if editable
+    return
+  ,
+  showNewForm : ->
+    std= {}
+    for lab in Standard.fields
+      std[lab] = ""
+    elem= _.template Template.stdform, {std : std}
+    View.editingElement = $(View.listElement)
+    View.configureForm elem, true
+    return
+  ,
   editStandard : (row,editable) ->
     id = $(row).attr "data-id"
     $.each Standard.standards, (ndx, val) ->
       if val._id == id
         View.editingElement = $(row).closest ".standard-row"
         elem= _.template Template.stdform, {std :val}
-        View.editingElement.after elem
-        $("#form").submit ->
-          View.processForm "#form",Standard.addOrUpdate
-          return false
-        $("#cancel-button").click ->
-          View.stopEditing()
-          return false
-        View.editingElement.hide()
-        $("#edit-buttons-wrap").show() if editable
-        $("#edit-buttons-wrap").hide() if not editable
-        $("#form input").attr "readonly","readonly" if not editable
-        $("#form input").removeAttr "readonly" if editable
+        View.configureForm elem, editable
     return
 }
 

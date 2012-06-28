@@ -1,5 +1,6 @@
 express = require "express"
 mongodb = require "mongodb"
+util = require 'util'
 
 mongoserver = new mongodb.Server "127.0.0.1", 27017, { auto_reconnect : true}
 db_connector = new mongodb.Db "standards", mongoserver, {}
@@ -16,7 +17,7 @@ app.configure ->
 app.get "/",(req,res) ->
     mydb.collection "standards", (err,coll) ->
         coll.find().toArray (err,docs) ->
-            console.log docs
+            console.log "Sending #{docs.length} docs"
             res.send docs
         return
     return
@@ -42,19 +43,21 @@ app.put "/", (req,res) ->
 
 
 saveorupdate = (req,res) ->
-    if req.body._id != null
+    console.log util.inspect req.body
+    if typeof req.body._id != 'undefined' && req.body._id != null
         console.log typeof req.body._id
         req.body._id = new mongodb.ObjectID(req.body._id)
     mydb.collection "standards", (err,coll) ->
-        console.log "Adding #{req.body.name}"
+        console.log "Adding #{req.body.name} with id #{req.body._id}"
         coll.save req.body, {safe : true }, (err, op) ->
             if err==null
                 console.log "success"
+                console.log util.inspect op
                 if op == 1
                     res.send 200
                 else
                     console.log "Sending json object back"
-                    res.json op
+                    res.json op,200
             else
                 console.log "error: #{err}"
                 res.send err,400

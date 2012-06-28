@@ -3,7 +3,7 @@
   <head>
     <title>Test</title>
     <link rel="stylesheet" type="text/css" href="/public/css/standards.css"/>
-    <script type="application/javascript" src="/public/lib/jquery-1.7.2.min.js"></script>
+    <script type="application/javascript" src="/public/lib/jquery-1.7.2.js"></script>
     <script type="application/javascript" src="/public/lib/underscore-min.js"></script>
     <script type="application/javascript" src="/public/js/shim.js"></script>
   </head>
@@ -26,7 +26,7 @@
     <script type="application/javascript" src="/public/js/std-client.js"></script>
     <script type="text/javascript">
      $(document).ready(function(){
-       $("button#newb").click(function() { View.clearForm(); });
+       $("button#newb").click(function() { View.showNewForm(); });
        $("button#filter-set").click(function() { View.setFilter("#filter-set"); });
        $("button#filter-clear").click(function() { View.clearFilter("#filter-clear"); });
        View.listElement = "#list-view";
