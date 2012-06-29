@@ -1,60 +1,82 @@
 body {
   font-family: "Verdana", "Helvetica", "Sans-serif";
   font-size: 14px;
-  background-color: #efe;
-  color: #111; 
-}
+  background-color: white;
+  color: #111; }
 
-div#tagcloud {
-  margin-left: 50%;
-  a.taginlist {
-    margin-right: 1em;
-    text-decoration: none;
-    font-size: 12px;
-  }
+div#main {
+  width: 1050px;
 }
-
+      
 div#list {
   float: left;
-  width: 50%;
+  width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+  
+div#tags {
+  width: 300px;
+  float: left;
 }
 
+a.taginlist {
+  margin-right: 1em;
+  text-decoration: none;
+  font-size: 12px; 
+}
+  
 div.standard-row {
-  width: 50%;
+  margin-top: 0.5em;
   margin-bottom: 0.5em; 
-  div.list-name {
-    font-weight: bold;
-  }
-  div.list-current {
-    font-size: 12px;
-  }
-  div.list-view-link, div.list-edit-link, div.list-del-link {
-    display: inline;
-    a {
-      font-size: 10px;
-      font-weight: bold;
-      color: #999;
-      text-decoration: none;
-    }
-  }
+}
+
+div.list-name {
+  font-weight: bold;
+  float: left;
+  margin-right: 2em;
+}
+
+div.list-item-links a {
+  font-size: 10px;
+  color: #999;
+  text-decoration: none;
+  margin-right: 1em; 
 }
 
 div#form {
-  width: 800px;
+  width: 80%;
   border: solid #333 1px;
 
-  #current-wrap, #deprecated-wrap { 
+  #name-wrap, #current-wrap, #deprecated-wrap { 
       float: left; 
       width: 48%; 
       margin-left: 1%;
   }
 
-  #emerging-wrap, #obsolete-wrap { 
+
+  #owner-wrap, #emerging-wrap, #obsolete-wrap { 
       margin-left: 50%;
       width: 48%;
   }
 
-  #tags-wrap, #name-wrap {
+ #owner-wrap {
+    height: 2.5em;
+    padding-top: 1em;
+
+    label {
+      width: 25%;
+      display: inline;
+    }
+    input {
+      width: 35%;
+    }
+    span {
+      width: 40%;
+    }
+  }
+
+  #tags-wrap, #notes-wrap {
       margin-left: 1%;
       width: 98%;
   }
@@ -73,4 +95,16 @@ div#form {
     display: inline;
     margin-right: 1em;
   }
+
+  div#cancel-wrap {
+      display: inline;
+      margin-left: 0.5em;
+      a {
+      font-size: 10px;
+      font-weight: bold;
+      color: #999;
+      text-decoration: none;
+      }
+    }
+    
 }

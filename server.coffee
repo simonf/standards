@@ -64,7 +64,8 @@ saveorupdate = (req,res) ->
         console.log typeof req.body._id
         req.body._id = new mongodb.ObjectID(req.body._id)
     mydb.collection "standards", (err,coll) ->
-        console.log "Adding #{req.body.name} with id #{req.body._id}"
+        req.body.updated = new Date()
+        console.log "Saving #{req.body.name} with id #{req.body._id}"
         coll.save req.body, {safe : true }, (err, op) ->
             if err==null
                 console.log "success"

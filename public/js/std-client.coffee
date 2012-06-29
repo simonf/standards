@@ -1,5 +1,5 @@
 Standard = {
-  fields : ["_id", "name", "current", "emerging", "deprecated", "obsolete", "tags"],
+  fields : ["_id", "name", "current", "emerging", "deprecated", "obsolete", "notes", "owner", "updated", "tags"],
   standards : [],
   tagfilter: [],
   tags: [],
@@ -221,9 +221,11 @@ Template = {
     <div class='standard-row'> 
       <div class='list-name'><%= std.name %></div>
       <div class='list-current'><%= std.current %></div>
-      <div class='list-view-link'><a href='' class='view-link' data-id='<%= std._id %>'>view</a></div>
-      <div class='list-edit-link'><a href='' class='edit-link' data-id='<%= std._id %>'>edit</a></div>
-      <div class='list-del-link'><a href='' class='del-link' data-id='<%= std._id %>'>delete</a></div>
+      <div class='list-item-links'>
+        <a href='' class='view-link' data-id='<%= std._id %>'>view</a>
+        <a href='' class='edit-link' data-id='<%= std._id %>'>edit</a>
+        <a href='' class='del-link' data-id='<%= std._id %>'>delete</a>
+      </div>
     </div>
 """,
   stdform: """
@@ -234,7 +236,15 @@ Template = {
 	    <label for='name'>Name</label>
 	    <input id='name' type='text' value='<%=std.name %>'/>
 	  </div>
-	  <div id='current-wrap'>
+          <div id='owner-wrap'>
+            <label for='owner' id='owner-label'>Owner</label>
+            <input id='owner' type='text' value='<%= std.owner %>'/>
+            <span id='updated-timestamp'>Updated: <% if(_.isString(std.updated)) { %>
+               <%= std.updated.split("T")[0] %>
+               <% } %>
+            </span>
+	  </div>
+          <div id='current-wrap'>
 	    <label for='current'>Current</label>
 	    <textarea id='current' rows='3'><%= std.current %></textarea>
 	  </div>
@@ -250,6 +260,10 @@ Template = {
 	    <label for='obsolete'>Obsolete</label>
 	    <textarea id='obsolete' rows='3'><%= std.obsolete %></textarea>
 	  </div>
+          <div id='notes-wrap'>
+            <label for='notes'>Notes</label>
+            <textarea id='notes' rows='3'><%= std.notes %></textarea>
+          </div>
 	  <div id='tags-wrap'>
 	    <label for='tags'>Tags (comma separated)</label>
 	    <input id='tags' type='text' value='<%= std.tags %>'/>

@@ -10,17 +10,21 @@
   <body>
     <div id="main">
       <h1>Standards</h1>
-      <div id="topstrip">
-	<button id="newb">New</button>
-	<input id="tagfilter" type="text"/>
-	<button id="filter-set">Filter</button>
-	<button id="filter-clear">Clear</button>
-      </div>
       <div id="list">
+	<div id="topstrip">
+	  <button id="newb">New</button>
+	</div>
 	<div id="list-view">
 	</div>
       </div>
-      <div id="tagcloud">
+      <div id="tags">
+	<div id="tagheader">
+	  <input id="tagfilter" type="text"/>
+	  <button id="filter-set">Filter</button>
+	  <button id="filter-clear">Clear</button>
+	</div>
+	<div id="tagcloud">
+	</div>
       </div>
     </div>
     <script type="application/javascript" src="/public/js/std-client.js"></script>
