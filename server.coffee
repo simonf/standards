@@ -35,15 +35,31 @@ app.get "/:id",(req,res) ->
 app.post "/", (req,res) ->
     console.log "Inbound post"
     saveorupdate req,res
+    return
 
 app.put "/", (req,res) ->
     console.log "Inbound put"
     saveorupdate req,res
+    return
 
-
+app.delete "/:id",(req,res) ->
+    console.log "Request to delete #{req.params.id}"
+    mydb.collection "standards", (err,coll) ->
+        tgt = { "_id" : new mongodb.ObjectID(req.params.id) }
+        coll.remove tgt, {safe: true}, (err,cnt) ->
+          console.log "Deleted #{cnt} documents"
+          if err or cnt==0
+            console.log err
+            res.send err,404
+          else
+            console.log "Deleted"
+            res.send()
+          return
+        return
+    return
 
 saveorupdate = (req,res) ->
-    console.log util.inspect req.body
+#    console.log util.inspect req.body
     if typeof req.body._id != 'undefined' && req.body._id != null
         console.log typeof req.body._id
         req.body._id = new mongodb.ObjectID(req.body._id)
@@ -52,7 +68,7 @@ saveorupdate = (req,res) ->
         coll.save req.body, {safe : true }, (err, op) ->
             if err==null
                 console.log "success"
-                console.log util.inspect op
+#                console.log util.inspect op
                 if op == 1
                     res.send 200
                 else

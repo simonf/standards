@@ -9,6 +9,8 @@ div#tagcloud {
   margin-left: 50%;
   a.taginlist {
     margin-right: 1em;
+    text-decoration: none;
+    font-size: 12px;
   }
 }
 
@@ -26,7 +28,7 @@ div.standard-row {
   div.list-current {
     font-size: 12px;
   }
-  div.list-view-link, div.list-edit-link {
+  div.list-view-link, div.list-edit-link, div.list-del-link {
     display: inline;
     a {
       font-size: 10px;

@@ -17,37 +17,54 @@ Standard = {
       return
     return
   ,
-  addOrUpdate : (std) ->
-    settings = { url : "/", data : {} }
-    for lab in Standard.fields
-       settings.data[lab]=std[lab]
-    settings.error = (jqxhr, status, err) ->
-       alert status + err + jqxhr.getAllResponseHeaders()
-       return
+  addOrUpdate : (std,callback) ->
     if std._id == null || std._id == ""
-       delete settings.data._id
-       settings.type = "POST"
-       settings.dataType = "json"
-       settings.success = (data) ->
-           std._id = data._id
-           $(View.listElement).append View.makeStandardElement std
-           Standards.standards.push std
-           View.clearForm()
-           return
-       settings.error = (jqxhr, txt, err) ->
-           alert "#{txt}: #{err}"
-           alert jqxhr.getAllResponseHeaders().toString()
-           return
+      Standard.postNew std, callback
     else
-       settings.type = "PUT"
-       settings.dataType = "text"
-       settings.success = (data) ->
-           $.each Standard.standards, (ndx,val) ->
-             if val._id == std._id
-               Standard.standards[ndx]=std
-           View.clearForm()
-           return
-    $.ajax settings
+      Standard.putUpdate std, callback
+  ,
+  postNew: (std, callback) ->
+    tosend =  {} 
+    for lab in Standard.fields
+      tosend[lab]=std[lab] if lab!="_id"
+    $.post '/', tosend, (data) ->
+      std._id = data._id
+      Standard.standards.push std
+      Standard.makeTagList()
+      callback()
+      return
+    return
+  ,
+  putUpdate: (std, callback) ->  
+    tosend =  {} 
+    for lab in Standard.fields
+      tosend[lab]=std[lab]
+    $.ajax {
+      url: "/",
+      type: "PUT",
+      data: tosend,
+      success: (data) ->
+        foundndxs = i for val,i in Standard.standards when val._id == std._id
+        Standard.standards[foundndxs]=std if foundndxs > -1
+        Standard.makeTagList()
+        callback()
+        return
+      }
+    return
+  ,
+  deleteStandard : (id, callback) ->
+    for std in Standard.standards
+      if std._id == id
+        $.ajax {
+          url: "/#{id}",
+          type: "DELETE",
+          success: (data) ->
+            foundndxs = i for val,i in Standard.standards when val._id == id
+            Standard.standards.splice foundndxs,1 if foundndxs > -1
+            Standard.makeTagList()
+            callback()
+            return
+          }
     return
   ,
   makeTagList : ->
@@ -72,6 +89,7 @@ View = {
   tagListElement : null,
   editingElement : null,
   showTagList : ->
+    $(View.tagListElement).empty()
     for tag in Standard.tags
       $(View.tagListElement).append _.template Template.tagcloudelement, {tag : tag}
   ,
@@ -109,6 +127,10 @@ View = {
       View.stopEditing()
       View.editStandard this,false
       return false
+    $("#list a.del-link").click ->
+      View.stopEditing()
+      View.deleteStandard this
+      return false
     return
   ,
   showFilteredStandards : ->
@@ -128,15 +150,11 @@ View = {
   ,
   processForm : (elem, func) ->
     std = View.makeStandardFromForm "#form"
-    Standard.addOrUpdate std
-    if std._id == null || std._id == ""
-      Standards.standards.push std
-    else
-      $.each Standard.standards, (ndx,val) ->
-        if val._id == std._id
-          Standard.standards[ndx]=std
-    View.stopEditing()
-    View.showFilteredStandards()    
+    Standard.addOrUpdate std, ->
+      View.stopEditing()
+      View.showFilteredStandards()
+      View.showTagList()
+      return
     return
   ,
   makeStandardFromForm : (elem) ->
@@ -184,6 +202,16 @@ View = {
         elem= _.template Template.stdform, {std :val}
         View.configureForm elem, editable
     return
+  ,
+  deleteStandard : (row) ->
+    id = $(row).attr "data-id"
+    name = $(row).parent().siblings(".list-name").text()
+    if confirm "Really delete #{name}?"
+      Standard.deleteStandard id, ->
+        View.showFilteredStandards()
+        View.showTagList()
+        return
+    return
 }
 
 Template = {
@@ -193,8 +221,9 @@ Template = {
     <div class='standard-row'> 
       <div class='list-name'><%= std.name %></div>
       <div class='list-current'><%= std.current %></div>
-      <div class='list-view-link'><a href='' class='view-link' data-id='<%= std._id %>'>View</a></div>
-      <div class='list-edit-link'><a href='' class='edit-link' data-id='<%= std._id %>'>Edit</a></div>
+      <div class='list-view-link'><a href='' class='view-link' data-id='<%= std._id %>'>view</a></div>
+      <div class='list-edit-link'><a href='' class='edit-link' data-id='<%= std._id %>'>edit</a></div>
+      <div class='list-del-link'><a href='' class='del-link' data-id='<%= std._id %>'>delete</a></div>
     </div>
 """,
   stdform: """
