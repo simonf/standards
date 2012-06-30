@@ -1,11 +1,12 @@
-View = {
+root = exports ? this
+root.View = {
   listElement : null,
   tagListElement : null,
   editingElement : null,
   showTagList : ->
-    $(View.tagListElement).empty()
+    $(@tagListElement).empty()
     for tag in Standard.tags
-      $(View.tagListElement).append _.template Template.tagcloudelement, {tag : tag}
+      $(@tagListElement).append _.template Template.tagcloudelement, {tag : tag}
   ,
   showSelectedTags : ->
     $("#tagfilter").val Standard.tagfilter.sort().join(' ')
@@ -14,23 +15,20 @@ View = {
     i = Standard.tagfilter.indexOf ctag
     Standard.tagfilter.splice i,1 if i != -1
     Standard.tagfilter.push ctag if i == -1
-    View.showSelectedTags()
-    View.showFilteredStandards()
-    return
+    @showSelectedTags()
+    @showFilteredStandards()
   ,
   setFilter : (elem) ->
     v = $("#tagfilter").val()
     va = v.split(/[ ,]/)
     Standard.tagfilter = (v for v in va when v.length > 0)
-    View.showSelectedTags()
-    View.showFilteredStandards()
-    return
+    @showSelectedTags()
+    @showFilteredStandards()
   ,
   clearFilter : (elem) ->
     Standard.tagfilter = []
-    View.showSelectedTags()
-    View.showFilteredStandards()
-    return
+    @showSelectedTags()
+    @showFilteredStandards()
   ,
   processClicks : ->
     $("div.list-lifecycle").hide()
@@ -51,31 +49,27 @@ View = {
       View.stopEditing()
       View.deleteStandard this
       return false
-    return
   ,
   showFilteredStandards : ->
-    View.showSomeStandards Standard.getFilteredStandards()
+    @showSomeStandards Standard.getFilteredStandards()
   ,
   showSomeStandards : (arr) ->
-    View.stopEditing()
-    $(View.listElement).empty()
-    $.each arr, (ndx,val) ->
-      $(View.listElement).append View.makeListItem val
+    @stopEditing()
+    $(@listElement).empty()
+    $.each arr, (ndx,val) =>
+      $(@listElement).append @makeListItem val
       return
-    View.processClicks()
-    return
+    @processClicks()
   ,
   makeListItem : (std) ->
     _.template Template.currentlist, { std : std }
   ,
   processForm : (elem, func) ->
-    std = View.makeStandardFromForm "#form"
-    Standard.addOrUpdate std, ->
-      View.stopEditing()
-      View.showFilteredStandards()
-      View.showTagList()
-      return
-    return
+    std = @makeStandardFromForm "#form"
+    Standard.addOrUpdate std, =>
+      @stopEditing()
+      @showFilteredStandards()
+      @showTagList()
   ,
   makeStandardFromForm : (elem) ->
     retval = {}
@@ -86,50 +80,47 @@ View = {
   ,
   stopEditing : ->
     $("#form").remove()
-    if View.editingElement != null
-      $(View.editingElement).show()
-      View.editingElement=null
+    if @editingElement != null
+      $(@editingElement).show()
+      @editingElement=null
   ,
   configureForm : (elem, editable) ->
-    View.editingElement.after elem
-    View.editingElement.hide()
-    $("#form").submit ->
-      View.processForm()
+    @editingElement.after elem
+    @editingElement.hide()
+    $("#form").submit =>
+      @processForm()
       return false
-    $("#cancel-button").click ->
-      View.stopEditing()
+    $("#cancel-button").click =>
+      @stopEditing()
       return false
     $("#edit-buttons-wrap").show() if editable
     $("#edit-buttons-wrap").hide() if not editable
     $("#form input").attr "readonly","readonly" if not editable
     $("#form input").removeAttr "readonly" if editable
-    return
   ,
   showNewForm : ->
     std= {}
-    for lab in Standard.fields
-      std[lab] = ""
+    std[lab]="" for lab in Standard.fields
     elem= _.template Template.stdform, {std : std}
-    View.editingElement = $(View.listElement)
-    View.configureForm elem, true
-    return
+    @editingElement = $(@listElement)
+    @configureForm elem, true
   ,
   editStandard : (row,editable) ->
     id = $(row).attr "data-id"
-    $.each Standard.standards, (ndx, val) ->
+    for val in Standard.standards
       if val._id == id
-        View.editingElement = $(row).closest ".standard-row"
+        @editingElement = $(row).closest ".standard-row"
         elem= _.template Template.stdform, {std :val}
-        View.configureForm elem, editable
+        @configureForm elem, editable
     return
   ,
   deleteStandard : (row) ->
     id = $(row).attr "data-id"
     name = $(row).parent().siblings(".list-name").text()
     if confirm "Really delete #{name}?"
-      Standard.deleteStandard id, ->
-        View.showFilteredStandards()
-        View.showTagList()
+      Standard.deleteStandard id, =>
+        @showFilteredStandards()
+        @showTagList()
         return
     return
   ,
