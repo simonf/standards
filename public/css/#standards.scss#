@@ -58,10 +58,6 @@ div.list-tags {
   color: $listtagcolor;
 }
 
-div.list-lifecyle {
-  display: none;
-}
-
 div.list-item-links {
   @include smallgreylink;
 }
