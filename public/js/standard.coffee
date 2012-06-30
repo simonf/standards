@@ -1,12 +1,13 @@
-Standard = {
+root = exports ? this
+root.Standard = {
   fields : ["_id", "name", "current", "emerging", "deprecated", "obsolete", "notes", "owner", "updated", "tags"],
   standards : [],
   tagfilter: [],
   tags: [],
   getAllStandards : (callback) ->
-    $.getJSON '/', (data) ->
-      Standard.standards = data
-      Standard.makeTagList()
+    $.getJSON '/', (data) =>
+      @standards = data
+      @makeTagList()
       callback()
       return
     return
@@ -19,59 +20,59 @@ Standard = {
   ,
   addOrUpdate : (std,callback) ->
     if std._id == null || std._id == ""
-      Standard.postNew std, callback
+      @postNew std, callback
     else
-      Standard.putUpdate std, callback
+      @putUpdate std, callback
   ,
   postNew: (std, callback) ->
     tosend =  {} 
-    for lab in Standard.fields
+    for lab in @fields
       tosend[lab]=std[lab] if lab!="_id"
-    $.post '/', tosend, (data) ->
+    $.post '/', tosend, (data) =>
       std._id = data._id
-      Standard.standards.push std
-      Standard.makeTagList()
+      @standards.push std
+      @makeTagList()
       callback()
       return
     return
   ,
   putUpdate: (std, callback) ->  
     tosend =  {} 
-    for lab in Standard.fields
+    for lab in @fields
       tosend[lab]=std[lab]
     $.ajax {
       url: "/",
       type: "PUT",
       data: tosend,
-      success: (data) ->
-        foundndxs = i for val,i in Standard.standards when val._id == std._id
-        Standard.standards[foundndxs]=std if foundndxs > -1
-        Standard.makeTagList()
+      success: (data) =>
+        foundndxs = i for val,i in @standards when val._id == std._id
+        @standards[foundndxs]=std if foundndxs > -1
+        @makeTagList()
         callback()
         return
       }
     return
   ,
   deleteStandard : (id, callback) ->
-    for std in Standard.standards
+    for std in @standards
       if std._id == id
         $.ajax {
           url: "/#{id}",
           type: "DELETE",
-          success: (data) ->
-            foundndxs = i for val,i in Standard.standards when val._id == id
-            Standard.standards.splice foundndxs,1 if foundndxs > -1
-            Standard.makeTagList()
+          success: (data) =>
+            foundndxs = i for val,i in @standards when val._id == id
+            @standards.splice foundndxs,1 if foundndxs > -1
+            @makeTagList()
             callback()
             return
           }
     return
   ,
   makeTagList : ->
-    Standard.tags = []
-    for std in Standard.standards
+    @tags = []
+    for std in @standards
       for tag in std.tags.split ','
-        Standard.tags.push tag.trim() if Standard.tags.indexOf(tag.trim()) == -1
+        @tags.push tag.trim() if @tags.indexOf(tag.trim()) == -1
     return
   ,
   matchTagList: (taglist, comma_separated) ->
@@ -81,5 +82,5 @@ Standard = {
     return retval
   ,
   getFilteredStandards :  ->
-    standard for standard in Standard.standards when Standard.matchTagList Standard.tagfilter, standard.tags
+    standard for standard in @standards when @matchTagList @tagfilter, standard.tags
 }

@@ -1,4 +1,6 @@
-Template = {
+root = exports ? this
+
+root.Template = {
   tagcloudelement : "<a class='taginlist' href='' onclick='javascript:View.tagClicked(\"<%= tag %>\"); return false;'><%= tag %></a>",
   linkinlist : "<div class='standard'><a href='' class='edit-link' data-id='<%= std._id %>'><%= std.name %></a></div>",
   currentlist: """
