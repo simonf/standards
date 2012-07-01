@@ -4,12 +4,36 @@
     <title>Test</title>
     <link rel="stylesheet" type="text/css" href="/public/css/standards.css"/>
     <script type="application/javascript" src="/public/lib/jquery-1.7.2.js"></script>
+    <script type="application/javascript" src="/public/lib/jquery.cookie.js"></script>
     <script type="application/javascript" src="/public/lib/underscore-min.js"></script>
     <script type="application/javascript" src="/public/js/shim.js"></script>
   </head>
   <body>
+    <header>
+      <div id="banner">
+	<h1>Standards</h1>
+      </div>
+      <div id="login-wrapper">
+	<div id="login-block">
+	  <form action="/login" method="post">
+	    <div id="username-block">
+	      <label>username:</label>
+	      <input id="username-in" type="text" name="username"/>
+	    </div>
+	    <div id="pwd-block">
+	      <label>password:</label>
+	      <input id="pwd-in" type="password" name="password"/>
+	    </div>
+	    <input id="submit-login" type="submit" value="Login"/>
+	  </form>
+	</div>
+	<div id="logout-block" style="display:none">
+	  <p>logged in as <span id="current-username">nobody</span></p>
+	  <form action="/logout" method="get"><input type="submit" id="submit-logout" value="logout"/></form>
+	</div>
+      </div>
+    </header>
     <div id="main">
-      <h1>Standards</h1>
       <div id="list">
 	<div id="topstrip">
 	  <button id="newb">New</button>
@@ -37,6 +61,7 @@
        $("button#filter-clear").click(function() { View.clearFilter("#filter-clear"); });
        View.listElement = "#list-view";
        View.tagListElement = "#tagcloud";
+       View.setLoggedInOrOut();
        Standard.getAllStandards(function() { 
                View.showFilteredStandards();
                View.showTagList();

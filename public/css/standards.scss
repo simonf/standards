@@ -17,6 +17,32 @@ body {
   background-color: white;
   color: #111; }
 
+header {
+  height: 35px;
+  border-bottom: solid black 1px;
+  div#banner {
+    float: left;
+    width: 500px;
+    h1 {
+      margin-left: 10px;
+      margin-top: 0px;
+      margin-bottom: 0px;
+      margin-right: 0px;
+      border: 0px;
+      padding: 0px;
+    }
+  }
+  div#login-wrapper {
+    font-size: 10px;
+    float: right;
+    margin-top: 10px;
+    margin-right: 10px;
+    div, form, label, input, p, button {
+      display: inline;
+    }
+  }
+}
+
 div#main {
   width: 1050px;
 }

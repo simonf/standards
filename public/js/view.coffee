@@ -3,6 +3,16 @@ root.View = {
   listElement : null,
   tagListElement : null,
   editingElement : null,
+  setLoggedInOrOut : ->
+    usr = $.cookie 'username'
+    if usr
+      $('#login-block').hide()
+      $('#logout-block').show()
+      $('#current-username').text(usr)
+    else
+      $('#login-block').show()
+      $('#logout-block').hide()
+  ,
   showTagList : ->
     $(@tagListElement).empty()
     for tag in Standard.tags
