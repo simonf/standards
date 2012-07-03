@@ -1,6 +1,30 @@
 express = require "express"
+passport = require "passport"
 mongodb = require "mongodb"
 util = require 'util'
+LocalStrategy = require("passport-local").Strategy
+ldapauth = require './ldapauth'
+scheme = 'ldap'
+ldap_host = 'uclusers-dc3.uclusers.ucl.ac.uk'
+ldap_port = 389
+   
+
+passport.serializeUser (user, done) ->  
+  console.log "serializing #{user}"
+  done null, user
+
+passport.deserializeUser (obj, done) ->  
+  console.log "deserializing #{obj}"
+  done null, obj
+
+passport.use(new LocalStrategy((username, password, done) ->
+    un = "#{username}@uclusers.ucl.ac.uk"
+    ldapauth.authenticate scheme, ldap_host, ldap_port, un, password, (err, result) ->
+      console.log "Done. err: #{err}, result: #{result}"
+      return done err if err
+      return done null, false, { message: 'Bad username or password' } if !result
+      return done null, username
+   ))
 
 mongoserver = new mongodb.Server "127.0.0.1", 27017, { auto_reconnect : true}
 db_connector = new mongodb.Db "standards", mongoserver, {}
@@ -9,8 +33,13 @@ mydb = null
 app = express.createServer()
 
 app.configure ->
-    app.use express.methodOverride()
+    app.use express.cookieParser()
     app.use express.bodyParser()
+    app.use express.methodOverride()
+    app.use express.session {secret: "authority design"}
+    app.use passport.initialize()
+    app.use passport.session()
+    app.use app.router
     app.use '/public', express.static __dirname + '/public'
     return
 
@@ -21,6 +50,12 @@ app.get "/",(req,res) ->
             res.send docs
         return
     return
+
+app.get "/logout", (req,res) ->
+  console.log "Logout called"
+  req.logout()
+  res.clearCookie 'username'
+  res.redirect '/public/index.html'
 
 app.get "/:id",(req,res) ->
     mydb.collection "standards", (err,coll) ->
@@ -55,6 +90,21 @@ app.delete "/:id",(req,res) ->
             console.log "Deleted"
             res.send()
           return
+        return
+    return
+
+app.post "/login", 
+  passport.authenticate('local',{ assignProperty: 'uname', failureRedirect: '/', failureFlash: true}),
+  (req, res) ->
+    console.log "Login successful."
+    mydb.collection "users", (err,coll) ->
+        tgt = { "username" : req.uname }
+        console.log "Looking for user #{tgt}"
+        coll.findOne tgt, (err,doc) ->
+            if not err
+              res.cookie 'username', req.uname, { maxAge: 900000 } 
+            res.redirect '/public/index.html'
+            return
         return
     return
 

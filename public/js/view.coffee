@@ -3,15 +3,18 @@ root.View = {
   listElement : null,
   tagListElement : null,
   editingElement : null,
+  loggedIn : false,
   setLoggedInOrOut : ->
     usr = $.cookie 'username'
     if usr
       $('#login-block').hide()
       $('#logout-block').show()
       $('#current-username').text(usr)
+      @loggedIn=true
     else
       $('#login-block').show()
       $('#logout-block').hide()
+      @loggedIn=false
   ,
   showTagList : ->
     $(@tagListElement).empty()
@@ -47,18 +50,18 @@ root.View = {
       tgt = "#life_#{id}"
       $(tgt).toggle()
       return false
-    $("#list a.edit-link").click ->
-      View.stopEditing()
-      View.editStandard this,true
-      return false
-    $("#list a.view-link").click ->
-      View.stopEditing()
-      View.editStandard this,false
-      return false
-    $("#list a.del-link").click ->
-      View.stopEditing()
-      View.deleteStandard this
-      return false
+    if @loggedIn
+      $("div.list-item-links").show()
+      $("#list a.edit-link").click ->
+        View.stopEditing()
+        View.editStandard this,true
+        return false
+      $("#list a.del-link").click ->
+        View.stopEditing()
+        View.deleteStandard this
+        return false
+    else
+      $("div.list-item-links").hide()
   ,
   showFilteredStandards : ->
     @showSomeStandards Standard.getFilteredStandards()

@@ -6,33 +6,38 @@ root.Template = {
   currentlist: """
     <div class='standard-row'> 
       <div class='list-name'><%= View.getDefaultAttribute(std,"name","Unknown") %></div>
-      <div class='list-current'><%= View.getDefaultAttribute(std,"current","") %></div>
-      <div class='list-tags'><%= View.getDefaultAttribute(std,"tags","") %></div>
-      <span class='sh-lifecycle'><a data_id='<%= std._id %>' href=''>lifecycle&gt;&gt;</a></span>
+      <div class='list-current'>
+        <span class="view-label">Current: </span>
+        <%= View.getDefaultAttribute(std,"current","") %>
+        <span class='sh-lifecycle'><a data_id='<%= std._id %>' href=''>more</a></span>
+      </div>
       <div class='list-lifecycle' id='life_<%= std._id %>'>
        <div class='list-emerging'>
         <span class='view-label'>Emerging: </span>
 	<%= View.getDefaultAttribute(std,"emerging","") %>
        </div>
        <div class='list-deprecated'>
-        <span class='view-label'>Deprecated</span>
+        <span class='view-label'>Deprecated: </span>
 	<%= View.getDefaultAttribute(std,"deprecated","") %>
        </div>
        <div class='list-obsolete'>
-        <span class='view-label'>Obsolete</span>
+        <span class='view-label'>Obsolete: </span>
 	<%= View.getDefaultAttribute(std,"obsolete","") %>
        </div>
        <div class='list-notes'>
-        <span class='view-label'>Notes</span>
+        <span class='view-label'>Notes: </span>
 	<%= View.getDefaultAttribute(std,"notes","") %>
        </div>
        <div class='list-meta'>
+        <span class='view-label'>Owner: </span>
         <span class="list-owner"><%= View.getDefaultAttribute(std,"owner","") %></span>
+        <span class='view-label'>Last edited: </span>
         <span class="list-updated"><% if(_.isString(std.updated)) { %>
                <%= std.updated.split("T")[0] %>
                <% } %></span>
        </div>
       </div>
+      <div class='list-tags'>Tags: <%= View.getDefaultAttribute(std,"tags","") %></div>
       <div class='list-item-links'>
         <a href='' class='edit-link' data-id='<%= std._id %>'>edit</a>
         <a href='' class='del-link' data-id='<%= std._id %>'>delete</a>
@@ -87,5 +92,11 @@ root.Template = {
           </div>
 	</form>
       </div>
+""",
+  commentform : """
+    <div id="comment-form">
+      <form action="/comment/<%= std._id %>" method="post">
+      </form>
+    </div>
 """
 }

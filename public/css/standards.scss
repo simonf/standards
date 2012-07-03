@@ -68,6 +68,10 @@ a.taginlist {
 div.standard-row {
   margin-top: 0.5em;
   margin-bottom: 0.5em; 
+  line-height: 1.5;
+  span.view-label {
+    font-style: italic;
+  }
 }
 
 span.sh-lifecycle {
@@ -76,7 +80,7 @@ span.sh-lifecycle {
 
 div.list-name {
   font-weight: bold;
-  float: left;
+
   margin-right: 2em;
 }
 
