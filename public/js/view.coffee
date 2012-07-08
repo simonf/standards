@@ -20,9 +20,13 @@ root.View = {
     $(@tagListElement).empty()
     for tag in Standard.tags
       $(@tagListElement).append _.template Template.tagcloudelement, {tag : tag}
+    return
   ,
   showSelectedTags : ->
-    $("#selectedtags").text Standard.tagfilter.sort().join(' ')
+    $("#selectedtags").empty()
+    for tag in Standard.tagfilter.sort()
+      $("#selectedtags").append _.template Template.tagcloudelement, {tag : tag}
+    return
   ,
   tagClicked : (ctag) ->
     i = Standard.tagfilter.indexOf ctag
