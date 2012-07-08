@@ -4,10 +4,22 @@ root.Standard = {
   standards : [],
   tagfilter: [],
   tags: [],
+  idlist: [],
+  searching: false,
   getAllStandards : (callback) ->
     $.getJSON '/', (data) =>
       @standards = data
       @makeTagList()
+      callback()
+  ,
+  queryTextFields : (searchTerms, callback) ->
+    qrystring = @makeQueryParamFromSearchTerms searchTerms
+    tosend = {}
+    tosend["qrystring"]=qrystring
+    $.post '/query', tosend, (data) ->
+      Standard.idlist=[]
+      Standard.idlist.push row._id for row in data
+      Standard.searching=true
       callback()
   ,
   getStandardByID : (id, callback) ->
@@ -61,8 +73,14 @@ root.Standard = {
     @accumulateTags std for std in @standards
     return
   ,
+  makeUniqueStrippedAndTrimmedArray: (str) ->
+    retval=[]
+    retval.push term.trim() for term in str.split /[\s,]+/ when not (term.trim() in retval)
+    retval
+  ,
   accumulateTags : (std) ->
-    @tags.push tag.trim() for tag in std.tags.split /[\s,]+/ when not (tag.trim() in @tags)
+#    @tags.push tag.trim() for tag in std.tags.split /[\s,]+/ when not (tag.trim() in @tags)
+    @tags.push tag for tag in @makeUniqueStrippedAndTrimmedArray(std.tags) when not (tag in @tags)
     return
   ,
   matchTagList: (taglist, comma_separated) ->
@@ -73,5 +91,18 @@ root.Standard = {
     return retval
   ,
   getFilteredStandards :  ->
-    standard for standard in @standards when @matchTagList @tagfilter, standard.tags
+    if @searching
+      standard for standard in @standards when standard._id in @idlist
+    else
+      standard for standard in @standards when @matchTagList @tagfilter, standard.tags
+  ,
+  makeQueryParamFromSearchTerms: (srchString) ->
+    # space or comma separated should be treated as different terms with an implicit "AND"
+    qa=@makeUniqueStrippedAndTrimmedArray srchString
+    retval = ""
+    first=true
+    for term in qa
+      if not first then retval = retval + "|" else first=false
+      retval = retval + term
+    retval
 }

@@ -67,6 +67,36 @@ app.get "/:id",(req,res) ->
         return
     return
 
+app.post "/query", (req,res) ->
+    console.log "Searching #{req.body?.qrystring}"
+    a=req.body?.qrystring || ""
+    b = new RegExp(a)
+    findParam = {
+      $or : [
+                      { name : b },
+                      { current : b },
+                      { emerging : b },
+                      { deprecated : b },
+                      { obsolete : b}
+      ]
+    }
+    console.log "Querying #{util.inspect(findParam)}"
+    mydb.collection "standards", (err,coll) ->
+        if err
+           console.log err
+           res.send 404
+        else
+            coll.find(findParam, {_id : 1}).toArray (err,docs) ->
+                if err
+                    console.log err
+                    res.send 404
+                else
+                    console.log docs
+                    res.send docs
+        return
+    return
+
+
 app.post "/", (req,res) ->
     console.log "Inbound post"
     saveorupdate req,res

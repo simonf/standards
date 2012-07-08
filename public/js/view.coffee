@@ -1,7 +1,7 @@
 root = exports ? this
 root.View = {
-  listElement : null,
-  tagListElement : null,
+  listElement : "#list-view",
+  tagListElement : "#tagcloud",
   editingElement : null,
   loggedIn : false,
   setLoggedInOrOut : ->
@@ -22,7 +22,7 @@ root.View = {
       $(@tagListElement).append _.template Template.tagcloudelement, {tag : tag}
   ,
   showSelectedTags : ->
-    $("#tagfilter").val Standard.tagfilter.sort().join(' ')
+    $("#selectedtags").text Standard.tagfilter.sort().join(' ')
   ,
   tagClicked : (ctag) ->
     i = Standard.tagfilter.indexOf ctag
@@ -31,15 +31,17 @@ root.View = {
     @showSelectedTags()
     @showFilteredStandards()
   ,
-  setFilter : (elem) ->
-    v = $("#tagfilter").val()
-    va = v.split(/[ ,]/)
-    Standard.tagfilter = (v for v in va when v.length > 0)
-    @showSelectedTags()
-    @showFilteredStandards()
+  doSearch :  ->
+    Standard.queryTextFields $("#searchfilter").val(), ->
+      Standard.tagfilter = []
+      View.showSelectedTags()
+      View.showFilteredStandards()
   ,
-  clearFilter : (elem) ->
+  clearSearch :  ->
+    $("#searchfilter").val ""
     Standard.tagfilter = []
+    Standard.idlist=[]
+    Standard.searching = false
     @showSelectedTags()
     @showFilteredStandards()
   ,

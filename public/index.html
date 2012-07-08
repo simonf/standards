@@ -39,15 +39,18 @@
       <div id="list">
 	<div id="topstrip">
 	  <button id="newb">New</button>
+	  <div id="searchheader">
+	    <input id="searchfilter" type="text"/>
+	    <button id="filter-set">Filter</button>
+	    <button id="filter-clear">Clear</button>
+	  </div>
 	</div>
 	<div id="list-view">
 	</div>
       </div>
       <div id="tags">
 	<div id="tagheader">
-	  <input id="tagfilter" type="text"/>
-	  <button id="filter-set">Filter</button>
-	  <button id="filter-clear">Clear</button>
+	  <p>Showing only tags: <span id="selectedtags"/></p>
 	</div>
 	<div id="tagcloud">
 	</div>
@@ -59,10 +62,8 @@
     <script type="text/javascript">
      $(document).ready(function(){
        $("button#newb").click(function() { View.showNewForm(); });
-       $("button#filter-set").click(function() { View.setFilter("#filter-set"); });
-       $("button#filter-clear").click(function() { View.clearFilter("#filter-clear"); });
-       View.listElement = "#list-view";
-       View.tagListElement = "#tagcloud";
+       $("button#filter-set").click(function() { View.doSearch(); });
+       $("button#filter-clear").click(function() { View.clearSearch(); });
        View.setLoggedInOrOut();
        Standard.getAllStandards(function() { 
                View.showFilteredStandards();
