@@ -94,7 +94,10 @@ root.View = {
     retval = {}
     for lab in Standard.fields
       tgt = "#{elem} ##{lab}"
-      retval[lab] = $(tgt).val()
+      if lab == 'tags'
+        retval["tags"]=Standard.makeUniqueStrippedAndTrimmedArray $(tgt).val()
+      else
+        retval[lab] = $(tgt).val()
     return retval
   ,
   stopEditing : ->
@@ -144,5 +147,11 @@ root.View = {
     return
   ,
   getDefaultAttribute : (std, attr, val) ->
-    if _.isUndefined std[attr] then val else std[attr]
+    if _.isUndefined std[attr]
+      val 
+    else 
+      if attr == 'tags'
+        std['tags'].join(' ')
+      else
+        std[attr]
 }
