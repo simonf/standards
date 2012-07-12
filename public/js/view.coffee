@@ -10,10 +10,12 @@ root.View = {
       $('#login-block').hide()
       $('#logout-block').show()
       $('#current-username').text(usr)
+      $('button#newb').show()
       @loggedIn=true
     else
       $('#login-block').show()
       $('#logout-block').hide()
+      $('button#newb').hide()
       @loggedIn=false
   ,
   showTagList : ->
