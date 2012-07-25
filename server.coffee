@@ -124,7 +124,7 @@ app.delete "/:id",(req,res) ->
     return
 
 app.post "/login", 
-  passport.authenticate('local',{ assignProperty: 'uname', failureRedirect: '/', failureFlash: true}),
+  passport.authenticate('local',{ assignProperty: 'uname', failureRedirect: '/public/index.html', failureFlash: true}),
   (req, res) ->
     console.log "Login successful."
     mydb.collection "users", (err,coll) ->

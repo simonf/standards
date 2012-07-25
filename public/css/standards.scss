@@ -11,7 +11,7 @@ $greylinkcolor: #999;
 }
 
 
-body {
+body, textarea{
   font-family: "Verdana", "Helvetica", "Sans-serif";
   font-size: 14px;
   background-color: white;
@@ -136,6 +136,11 @@ div#form {
   input[type=text], textarea {
     margin-left: 0.5em;
     width: 98%; 
+    font-size: 13px;
+  }
+
+  textarea {
+    resize: none;
   }
 
   label {
