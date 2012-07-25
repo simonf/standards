@@ -79,14 +79,13 @@ root.Standard = {
     retval
   ,
   accumulateTags : (std) ->
-#    @tags.push tag.trim() for tag in std.tags.split /[\s,]+/ when not (tag.trim() in @tags)
-    @tags.push tag for tag in @makeUniqueStrippedAndTrimmedArray(std.tags) when not (tag in @tags)
+    @tags.push tag for tag in std.tags when not (tag in @tags)
     return
   ,
-  matchTagList: (taglist, comma_separated) ->
+  matchTagList: (taglist, tagarray) ->
     retval = if taglist.length > 0 then false else true
     for tag in taglist
-      if comma_separated.indexOf(tag.trim()) >=0
+      if tag.trim() in tagarray
         return true
     return retval
   ,

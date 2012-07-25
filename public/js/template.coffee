@@ -82,7 +82,7 @@ root.Template = {
           </div>
 	  <div id='tags-wrap'>
 	    <label for='tags'>Tags (comma separated)</label>
-	    <input id='tags' type='text' value='<%= std.tags %>'/>
+	    <input id='tags' type='text' value='<%= std.tags.join(' ') %>'/>
 	  </div>
           <div id='edit-buttons-wrap'>
 	    <input type='submit' value='Submit' id='submit'></input>
