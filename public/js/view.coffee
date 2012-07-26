@@ -53,7 +53,7 @@ root.View = {
   ,
   processClicks : ->
     $("div.list-lifecycle").hide()
-    $("span.sh-lifecycle a").click ->
+    $(".sh-lifecycle a").click ->
       id = $(this).attr('data_id')
       tgt = "#life_#{id}"
       $(tgt).toggle()
@@ -155,5 +155,6 @@ root.View = {
       if attr == 'tags'
         std['tags'].join(' ')
       else
-        std[attr]
+        std[attr].replace(/\n/g,"<br/>")
+
 }
