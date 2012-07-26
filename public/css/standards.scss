@@ -113,6 +113,7 @@ div.list-lifecyle {
 }
 
 div.list-item-links {
+  font-size: 10px;
   @include smallgreylink;
 }
 
@@ -127,24 +128,23 @@ div#form {
   }
 
 
-  #owner-wrap, #emerging-wrap, #obsolete-wrap { 
+  #emerging-wrap, #obsolete-wrap, #owner-updated-wrap { 
       margin-left: 50%;
       width: 48%;
   }
 
  #owner-wrap {
-    height: 2.5em;
-    padding-top: 1em;
+    float: left;
+    width: 60%;
+  }
+  
+  #updated-wrap {
+    margin-left: 65%;
+    padding-top: .2em;
+    height: 3em;
 
-    label {
-      width: 25%;
-      display: inline;
-    }
-    input {
-      width: 35%;
-    }
-    span {
-      width: 40%;
+    span#updated {
+      font-size: 12px;
     }
   }
 
