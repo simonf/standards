@@ -49,7 +49,7 @@ root.View = {
   ,
   processClicks : ->
     $("div.list-lifecycle").hide()
-    $("span.sh-lifecycle a").click ->
+    $(".sh-lifecycle a").click ->
       id = $(this).attr('data_id')
       tgt = "#life_#{id}"
       $(tgt).toggle()
@@ -142,5 +142,5 @@ root.View = {
     return
   ,
   getDefaultAttribute : (std, attr, val) ->
-    if _.isUndefined std[attr] then val else std[attr]
+    if _.isUndefined std[attr] then val else std[attr].replace(/\n/g,"<br/>")
 }
