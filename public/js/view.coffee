@@ -152,9 +152,9 @@ root.View = {
     if _.isUndefined std[attr]
       val 
     else 
-      if attr == 'tags'
-        std['tags'].join(' ')
-      else
-        std[attr].replace(/\n/g,"<br/>")
+#      if attr == 'tags'
+#        std['tags'].join(' ')
+#      else
+      std[attr].replace(/\n/g,"<br/>")
 
 }

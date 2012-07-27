@@ -7,7 +7,10 @@ ldapauth = require './ldapauth'
 scheme = 'ldap'
 ldap_host = 'uclusers-dc3.uclusers.ucl.ac.uk'
 ldap_port = 389
-   
+mongoserver = new mongodb.Server "127.0.0.1", 27017, { auto_reconnect : true}
+db_connector = new mongodb.Db "standards", mongoserver, {}
+mydb = null
+ 
 
 passport.serializeUser (user, done) ->  
   console.log "serializing #{user}"
@@ -23,12 +26,14 @@ passport.use(new LocalStrategy((username, password, done) ->
       console.log "Done. err: #{err}, result: #{result}"
       return done err if err
       return done null, false, { message: 'Bad username or password' } if !result
-      return done null, username
+      mydb.collection "da_members", (err,coll) ->
+        return done err if err
+        tgt = { "username": username }
+        coll.findOne tgt, (err,doc) ->
+           return done err if err
+           return done null, username
    ))
 
-mongoserver = new mongodb.Server "127.0.0.1", 27017, { auto_reconnect : true}
-db_connector = new mongodb.Db "standards", mongoserver, {}
-mydb = null
 
 app = express.createServer()
 
