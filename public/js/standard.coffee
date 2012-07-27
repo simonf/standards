@@ -84,9 +84,16 @@ root.Standard = {
   ,
   matchTagList: (taglist, tagarray) ->
     retval = if taglist.length > 0 then false else true
+    matchcnt=0
     for tag in taglist
+<<<<<<< HEAD
       if tag.trim() in tagarray
         return true
+=======
+      if comma_separated.indexOf(tag.trim()) >=0
+        matchcnt += 1
+        retval = true if matchcnt == taglist.length
+>>>>>>> develop
     return retval
   ,
   getFilteredStandards :  ->
