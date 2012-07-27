@@ -75,7 +75,7 @@ root.Standard = {
   ,
   makeUniqueStrippedAndTrimmedArray: (str) ->
     retval=[]
-    retval.push term.trim() for term in str.split /[\s,]+/ when not (term.trim() in retval)
+    retval.push term.trim() for term in str.trim().split /[\s,]+/ when ((not (term.trim() in retval)) and term.trim().length > 0)
     retval
   ,
   accumulateTags : (std) ->

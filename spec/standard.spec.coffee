@@ -26,6 +26,29 @@ describe 'standard', ->
     aCallback=createSpy 'acallback'
     jasmine.getGlobal().Standard=mod.Standard
     mod.Standard.queryTextFields 'one two', aCallback
-    expect(aCallback).toHaveBeenCalled
+    expect(aCallback).toHaveBeenCalled()
     expect(mod.Standard.idlist.length).toEqual 3
     
+  it 'should send an update or insert depending if passed a standard with or without an id', ->
+    spyOn(mod.Standard,'postNew')
+    spyOn(mod.Standard,'putUpdate')
+    std1 = {_id: 1}
+    std2 = {name : 'aa'}
+    mod.Standard.addOrUpdate std1, ->
+      "OK"
+    expect(mod.Standard.putUpdate).toHaveBeenCalled()
+    mod.Standard.addOrUpdate std2, ->
+      "OK"
+    expect(mod.Standard.postNew).toHaveBeenCalled()
+
+  it 'should make a tag list', ->
+    stds = [{tags: "one, two,three four"},{tags: "two four,one"}]
+    mod.Standard.standards=stds
+    mod.Standard.makeTagList()
+    expect(mod.Standard.tags.length).toEqual 4
+
+  it 'should strip and trim a string into an array', ->
+    astr = "two   one,three ,,four , five, "
+    res = mod.Standard.makeUniqueStrippedAndTrimmedArray astr
+    console.log res
+    expect(res.length).toEqual 5
