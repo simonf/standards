@@ -151,10 +151,10 @@ root.View = {
   getDefaultAttribute : (std, attr, val) ->
     if _.isUndefined std[attr]
       val 
-    else 
-#      if attr == 'tags'
-#        std['tags'].join(' ')
-#      else
-      std[attr].replace(/\n/g,"<br/>")
+    else
+      if attr == 'tags'
+        std['tags'].join(' ')
+      else
+        std[attr].replace(/\n/g,"<br/>")
 
 }

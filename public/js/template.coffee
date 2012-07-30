@@ -53,7 +53,7 @@ root.Template = {
 	  <input type='hidden' id='_id' value='<%= std._id %>'/>
 	  <div id='name-wrap'>
 	    <label for='name'>Name</label>
-	    <input id='name' type='text' value='<%=std.name %>'/>
+	    <input id='name' type='text' value='<%= View.getDefaultAttribute(std,"name","")  %>'/>
 	  </div>
  	  <div id='owner-updated-wrap'>
             <div id='owner-wrap'>
@@ -70,27 +70,27 @@ root.Template = {
 	  </div>
           <div id='current-wrap'>
 	    <label for='current'>Current</label>
-	    <textarea class='std-textarea' rows='5'><%= std.current %></textarea>
+	    <textarea class='std-textarea' rows='5'><%= View.getDefaultAttribute(std,"current","") %></textarea>
 	  </div>
 	  <div id='emerging-wrap'>
 	    <label for='emerging'>Emerging</label>
-	    <textarea class='std-textarea' rows='5'><%= std.emerging %></textarea>
+	    <textarea class='std-textarea' rows='5'><%= View.getDefaultAttribute(std,"emerging","") %></textarea>
 	  </div>
 	  <div id='deprecated-wrap'>
 	    <label for='deprecated'>Deprecated</label>
-	    <textarea class-'std-textarea' rows='5'><%= std.deprecated %></textarea>
+	    <textarea class-'std-textarea' rows='5'><%= View.getDefaultAttribute(std,"deprecated","") %></textarea>
 	  </div>
 	  <div id='obsolete-wrap'>
 	    <label for='obsolete'>Obsolete</label>
-	    <textarea class-'std-textarea' rows='5'><%= std.obsolete %></textarea>
+	    <textarea class-'std-textarea' rows='5'><%= View.getDefaultAttribute(std,"obsolete","") %></textarea>
 	  </div>
           <div id='notes-wrap'>
             <label for='notes'>Notes</label>
-            <textarea class-'std-textarea' rows='5'><%= std.notes %></textarea>
+            <textarea class-'std-textarea' rows='5'><%= View.getDefaultAttribute(std,"notes","") %></textarea>
           </div>
 	  <div id='tags-wrap'>
 	    <label for='tags'>Tags (comma separated)</label>
-	    <input id='tags' type='text' value='<%= std.tags.join(' ') %>'/>
+	    <input id='tags' type='text' value='<%= View.getDefaultAttribute(std,"tags","") %>'/>
 	  </div>
           <div id='edit-buttons-wrap'>
 	    <input type='submit' value='Submit' id='submit'></input>
