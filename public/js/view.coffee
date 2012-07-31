@@ -1,5 +1,7 @@
 root = exports ? this
 root.View = {
+  pageSize : 5,
+  pageNumber : 0,
   listElement : "#list-view",
   tagListElement : "#tagcloud",
   editingElement : null,
@@ -124,7 +126,8 @@ root.View = {
   ,
   showNewForm : ->
     std= {}
-    std[lab]="" for lab in Standard.fields
+    std[lab]="" for lab in Standard.fields unless lab == 'tags'
+    std.tags=[]
     elem= _.template Template.stdform, {std : std}
     @editingElement = $(@listElement)
     @configureForm elem, true

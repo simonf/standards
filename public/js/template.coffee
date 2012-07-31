@@ -70,23 +70,23 @@ root.Template = {
 	  </div>
           <div id='current-wrap'>
 	    <label for='current'>Current</label>
-	    <textarea class='std-textarea' rows='5'><%= View.getDefaultAttribute(std,"current","") %></textarea>
+	    <textarea id='current' class='std-textarea' rows='5'><%= View.getDefaultAttribute(std,"current","") %></textarea>
 	  </div>
 	  <div id='emerging-wrap'>
 	    <label for='emerging'>Emerging</label>
-	    <textarea class='std-textarea' rows='5'><%= View.getDefaultAttribute(std,"emerging","") %></textarea>
+	    <textarea id='emerging' class='std-textarea' rows='5'><%= View.getDefaultAttribute(std,"emerging","") %></textarea>
 	  </div>
 	  <div id='deprecated-wrap'>
 	    <label for='deprecated'>Deprecated</label>
-	    <textarea class-'std-textarea' rows='5'><%= View.getDefaultAttribute(std,"deprecated","") %></textarea>
+	    <textarea id='deprecated' class='std-textarea' rows='5'><%= View.getDefaultAttribute(std,"deprecated","") %></textarea>
 	  </div>
 	  <div id='obsolete-wrap'>
 	    <label for='obsolete'>Obsolete</label>
-	    <textarea class-'std-textarea' rows='5'><%= View.getDefaultAttribute(std,"obsolete","") %></textarea>
+	    <textarea id='obsolete' class='std-textarea' rows='5'><%= View.getDefaultAttribute(std,"obsolete","") %></textarea>
 	  </div>
           <div id='notes-wrap'>
             <label for='notes'>Notes</label>
-            <textarea class-'std-textarea' rows='5'><%= View.getDefaultAttribute(std,"notes","") %></textarea>
+            <textarea id='notes' class='std-textarea' rows='5'><%= View.getDefaultAttribute(std,"notes","") %></textarea>
           </div>
 	  <div id='tags-wrap'>
 	    <label for='tags'>Tags (comma separated)</label>
