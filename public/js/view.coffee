@@ -54,6 +54,12 @@ root.View = {
     @showFilteredStandards()
   ,
   processClicks : ->
+    $("#page-left").click =>
+      @changePage -1
+      return false
+    $("#page-right").click =>
+      @changePage 1
+      return false
     $("div.list-lifecycle").hide()
     $(".sh-lifecycle a").click ->
       id = $(this).attr('data_id')
@@ -73,8 +79,12 @@ root.View = {
     else
       $("div.list-item-links").hide()
   ,
+  changePage : (increment) ->
+    @pageNumber += increment if (increment > 0 and @pageNumber * @pageSize < Standard.getFilteredStandards.length) or (increment < 0 and @pageNumber > 0)
+    @showFilteredStandards()
+  ,
   showFilteredStandards : ->
-    @showSomeStandards Standard.getFilteredStandards()
+    @showSomeStandards Standard.getFilteredStandards @pageSize, @pageSize * @pageNumber
   ,
   showSomeStandards : (arr) ->
     @stopEditing()
