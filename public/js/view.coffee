@@ -21,14 +21,13 @@ root.View = {
       @loggedIn=false
   ,
   showTagList : ->
-    @pageNumber = 0
+    $(@tagListElement).empty()
     for tag in Standard.tags
       $(@tagListElement).append _.template Template.tagcloudelement, {tag : tag}
     return
   ,
   showSelectedTags : ->
     $("#selectedtags").empty()
-    $(@tagListElement).empty()
     for tag in Standard.tagfilter.sort()
       $("#selectedtags").append _.template Template.tagcloudelement, {tag : tag}
     return
@@ -38,6 +37,7 @@ root.View = {
     Standard.tagfilter.splice i,1 if i != -1
     Standard.tagfilter.push ctag if i == -1
     @showSelectedTags()
+    @pageNumber = 0
     @showFilteredStandards()
   ,
   doSearch :  ->
