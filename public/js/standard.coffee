@@ -80,7 +80,7 @@ root.Standard = {
   ,
   accumulateTags : (std) ->
     @tags.push tag for tag in std.tags when not (tag in @tags)
-#    @tags.push tag for tag in std.tags.split(/[, ]+/) when not (tag in @tags)
+##    @tags.push tag for tag in std.tags.split(/[, ]+/) when not (tag in @tags)
     return
   ,
   matchTagList: (taglist, tagarray) ->

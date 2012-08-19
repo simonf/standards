@@ -42,7 +42,7 @@ describe 'standard', ->
     expect(mod.Standard.postNew).toHaveBeenCalled()
 
   it 'should make a tag list', ->
-    stds = [{tags: "one, two,three four"},{tags: "two four,one"}]
+    stds = [{tags: ["one","two","three","four"]},{tags:["two","four","one"]}]
     mod.Standard.standards=stds
     mod.Standard.makeTagList()
     expect(mod.Standard.tags.length).toEqual 4
