@@ -103,9 +103,11 @@ root.Standard = {
   ,
   getFilteredStandards : (pageSize, startRow) ->
     if @searching
-      standard for standard,i in @standards when standard._id in @idlist and i >= startRow and i <= startRow + pageSize
+      filtered = (standard for standard in @standards when standard._id in @idlist)
+      standard for standard,i in filtered when (i >= startRow and i <= startRow + pageSize)
     else
-      standard for standard,i in @standards when @matchTagList(@tagfilter, standard.tags) and i >= startRow and i <= startRow + pageSize
+      filtered = (standard for standard in @standards when @matchTagList(@tagfilter, standard.tags)) 
+      standard for standard, i in filtered when (i >= startRow and i <= startRow + pageSize)
   ,
   makeQueryParamFromSearchTerms: (srchString) ->
     # space or comma separated should be treated as different terms with an implicit "AND"

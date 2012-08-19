@@ -1,6 +1,6 @@
 root = exports ? this
 root.View = {
-  pageSize : 5,
+  pageSize : 10,
   pageNumber : 0,
   listElement : "#list-view",
   tagListElement : "#tagcloud",
@@ -21,13 +21,14 @@ root.View = {
       @loggedIn=false
   ,
   showTagList : ->
-    $(@tagListElement).empty()
+    @pageNumber = 0
     for tag in Standard.tags
       $(@tagListElement).append _.template Template.tagcloudelement, {tag : tag}
     return
   ,
   showSelectedTags : ->
     $("#selectedtags").empty()
+    $(@tagListElement).empty()
     for tag in Standard.tagfilter.sort()
       $("#selectedtags").append _.template Template.tagcloudelement, {tag : tag}
     return
@@ -60,6 +61,9 @@ root.View = {
     $("#page-right").click =>
       @changePage 1
       return false
+    $("#select-size select").change =>
+      @changePageSize $("#select-size select option:selected").val()
+      return false
     $("div.list-lifecycle").hide()
     $(".sh-lifecycle a").click ->
       id = $(this).attr('data_id')
@@ -82,6 +86,14 @@ root.View = {
   changePage : (increment) ->
     @pageNumber += increment if (increment > 0 and @pageNumber * @pageSize < Standard.getFilteredStandards.length) or (increment < 0 and @pageNumber > 0)
     @showFilteredStandards()
+  ,
+  changePageSize : (textval) ->
+    sz = parseInt textval
+    sz = 9999 if isNaN sz
+    if sz != @pageSize
+      @pageNumber = 0
+      @pageSize = sz
+      @showFilteredStandards()
   ,
   showFilteredStandards : ->
     @showSomeStandards Standard.getFilteredStandards @pageSize, @pageSize * @pageNumber

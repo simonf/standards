@@ -1,18 +1,20 @@
 root = exports ? this
 
 root.Template = {
-  tagcloudelement : "<a class='taginlist' href='' onclick='javascript:View.tagClicked(\"<%= tag %>\"); return false;'><%= tag %></a>",
+  tagcloudelement : "<a class='taginlist' href='' onclick='javascript:View.tagClicked(\"<%= tag %>\"); return false;'><%= tag %></a> ",
   linkinlist : "<div class='standard'><a href='' class='edit-link' data-id='<%= std._id %>'><%= std.name %></a></div>",
   currentlist: """
     <div class='standard-row'> 
-      <div class='list-name'><%= View.getDefaultAttribute(std,"name","Unknown") %></div>
-      <div class='sh-lifecycle'><a data_id='<%= std._id %>' href=''>&gt;&gt;</a></div>
+      <div class="std-head">
+        <div class='sh-lifecycle'><a data_id='<%= std._id %>' href=''>&gt;&gt;</a></div>
+        <div class='list-name'><%= View.getDefaultAttribute(std,"name","Unknown") %></div>
+      </div>
       <div class="std-wrap">
-        <div class='list-current std-lifecycle-item'>
-          <div class="view-label">Current: </div>
-          <div class="li-content"><%= View.getDefaultAttribute(std,"current","") %></div>
-        </div>
         <div class='list-lifecycle' id='life_<%= std._id %>'>
+          <div class='list-current std-lifecycle-item'>
+            <div class="view-label">Current: </div>
+            <div class="li-content"><%= View.getDefaultAttribute(std,"current","") %></div>
+          </div>
           <div class='list-emerging std-lifecycle-item'>
             <div class='view-label'>Emerging: </div>
 	    <div class="li-content"><%= View.getDefaultAttribute(std,"emerging","") %></div>
@@ -40,7 +42,7 @@ root.Template = {
 	  </div>
 	</div>
       </div>
-      <div class='list-tags'>Tags: <%= View.getDefaultAttribute(std,"tags","") %></div>
+      <div class='list-tags'><%= View.getDefaultAttribute(std,"tags","") %></div>
       <div class='list-item-links'>
         <a href='' class='edit-link' data-id='<%= std._id %>'>edit</a>
         <a href='' class='del-link' data-id='<%= std._id %>'>delete</a>

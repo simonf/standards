@@ -1,5 +1,6 @@
 $listtagcolor: #009;
 $greylinkcolor: #999;
+$tagfontsize: 12px;
 
 @mixin smallgreylink {
   a {
@@ -44,25 +45,41 @@ header {
 }
 
 div#main {
-  width: 1050px;
 }
       
 div#list {
   float: left;
-  width: 700px;
-  margin-left: auto;
-  margin-right: auto;
+  max-width: 700px;
+}
+
+div#page-links {
+  div#go-left {
+    float: left;
+    margin-right: 2em;
+  }
+
+  div#go-right {
+    float: left;
+  }
+  div#select-size {
+    float: left;
+    margin-right: 2em;
+  }
+  a {
+    margin-right: 1em;
+  }
 }
   
 div#tags {
   width: 300px;
-  float: left;
+  float: right;
+  margin-right: 0px;
 }
 
 a.taginlist {
   margin-right: 1em;
   text-decoration: none;
-  font-size: 12px; 
+  font-size: $tagfontsize; 
 }
   
 div.standard-row {
@@ -70,19 +87,22 @@ div.standard-row {
   margin-bottom: 0.5em; 
   line-height: 1.5;
 
-  div.list-name {
-    font-weight: bold;
-    margin-right: 2em;
-  }
+  div.std-head {
 
-  div.sh-lifecycle {
-    @include smallgreylink;
-    float: left;
+    div.sh-lifecycle {
+      float: left;
+      width: 2em;
+      @include smallgreylink;
+    }
+
+    div.list-name {
+      font-weight: bold;
+      margin-left: 2em;
+    }
   }
 
   div.std-wrap {
-    margin-left: 15px;
-    float: left;
+    margin-left: 2em;
 
     div.std-lifecycle-item {
       clear: left;
@@ -95,7 +115,7 @@ div.standard-row {
         width: 100px;
       }
       div.li-content {
-        float: left;
+        margin-left: 100px;
       }
     }
   }
@@ -104,8 +124,10 @@ div.standard-row {
 }
 
 div.list-tags {
+  margin-left: 15px;
   clear: both;
   color: $listtagcolor;
+  font-size: $tagfontsize;
 }
 
 div.list-lifecyle {
