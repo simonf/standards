@@ -80,7 +80,6 @@ root.Standard = {
   ,
   accumulateTags : (std) ->
     @tags.push tag for tag in std.tags when not (tag in @tags)
-#    @tags.push tag for tag in std.tags.split(/[, ]+/) when not (tag in @tags)
     return
   ,
   matchTagList: (taglist, tagarray) ->
@@ -92,14 +91,6 @@ root.Standard = {
           matchcnt += 1
           retval = true if matchcnt == taglist.length
     return retval
-#  matchTagList: (taglist, comma_separated) ->
-#    retval = if taglist.length > 0 then false else true
-#    matchcnt=0
-#    for tag in taglist
-#      if comma_separated.indexOf(tag.trim()) >=0
-#        matchcnt += 1
-#        retval = true if matchcnt == taglist.length
-#    return retval
   ,
   getFilteredStandards : (pageSize, startRow) ->
     if @searching
